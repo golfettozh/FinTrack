@@ -1,4 +1,4 @@
-package repository;
+package org.golfettozh.finTrack.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;

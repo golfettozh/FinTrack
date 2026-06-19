@@ -1,4 +1,4 @@
-package entity;
+package org.golfettozh.finTrack.entity;
 
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -21,7 +21,8 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Account> accounts = new ArrayList<>();
 
     public User() {}
@@ -32,7 +33,6 @@ public class User {
         this.cpf = cpf;
     }
 
-    // Método utilitário (Helper) para manter a relação bidirecional sincronizada
     public void addAccount(Account account) {
         this.accounts.add(account);
         account.setUser(this);
@@ -46,31 +46,26 @@ public class User {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getCpf() {
+        return cpf;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
     public List<Account> getAccounts() {
         return accounts;
     }
 
-    public void setAccounts(List<Account> accounts) {
-        this.accounts = accounts;
+    @Override
+    public String toString() {
+
+        return "\n======== TITULAR User: " + name + " ========\n" +
+                "Conta ID: " + getId() + "\n" +
+                "CPF:   " + getCpf() + "\n" +
+                "Email:     " + getEmail() + "\n" +
+                "Contas:     " + getAccounts() + "\n" +
+                "=======================================";
     }
 }

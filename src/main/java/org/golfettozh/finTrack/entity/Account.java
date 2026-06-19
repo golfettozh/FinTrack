@@ -1,8 +1,8 @@
-package entity;
+package org.golfettozh.finTrack.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-// import java.util.List;
+import java.util.List;
 
 @Entity
 @Table(name = "accounts")
@@ -31,10 +31,9 @@ public class Account {
         POUPANCA
     }
 
-    /*
+
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    private List<Transaction> transactions;
-    */
+    private List<Transaction> transaction;
 
     public Account() {}
 
@@ -44,7 +43,6 @@ public class Account {
         this.balance = balance;
         this.type = type;
     }
-
 
     public Long getId() {
         return id;
@@ -58,16 +56,8 @@ public class Account {
         return accountNumber;
     }
 
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
-    }
-
     public AccountType getType() {
         return type;
-    }
-
-    public void setType(AccountType type) {
-        this.type = type;
     }
 
     public BigDecimal getBalance() {
@@ -78,11 +68,19 @@ public class Account {
         this.balance = balance;
     }
 
-    public User getUser() {
-        return user;
-    }
-
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        String nomeDono = (this.user != null) ? this.user.getName() : "Usuário Desconhecido";
+
+        return "\n======== TITULAR Account: " + nomeDono + " ========\n" +
+                "Conta ID: " + getId() + "\n" +
+                "Número:   " + getAccountNumber() + "\n" +
+                "Tipo:     " + getType() + "\n" +
+                "Saldo:    R$ " + getBalance() + "\n" +
+                "=======================================";
     }
 }

@@ -1,10 +1,11 @@
-package service;
+package org.golfettozh.finTrack.service;
 
-import entity.Account;
-import entity.User;
-import repository.AccountRepository;
-import repository.UserRepository;
+import org.golfettozh.finTrack.entity.Account;
+import org.golfettozh.finTrack.entity.User;
+import org.golfettozh.finTrack.repository.AccountRepository;
+import org.golfettozh.finTrack.repository.UserRepository;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 public class AccountService {
@@ -17,7 +18,7 @@ public class AccountService {
         this.userRepository = userRepository;
     }
 
-    public Account createAccount(Long userId, String accountNumber, Account.AccountType type) {
+    public Account createAccountForUsersWithUserID(Long userId, String accountNumber, Account.AccountType type) {
 
         Optional<User> userOptional = userRepository.findById(userId);
 
@@ -32,5 +33,13 @@ public class AccountService {
         foundUser.addAccount(newAccount);
 
         return accountRepository.save(newAccount);
+    }
+
+    public List<Account> findAllAccountsByUserId(Long userId) {
+        if (userId == null || userId <= 0 || accountRepository.findById(userId).isEmpty()) {
+            throw new IllegalArgumentException("ID de usuário inválido.");
+        }
+
+        return accountRepository.findAllByUserId(userId);
     }
 }

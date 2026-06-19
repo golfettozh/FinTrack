@@ -1,39 +1,33 @@
 package org.golfettozh.finTrack;
 
-import entity.Account;
-import entity.User;
-import repository.AccountRepository;
-import repository.UserRepository;
-import service.AccountService;
-import service.UserService;
+
+import org.golfettozh.finTrack.menu.AppMenu;
+import org.golfettozh.finTrack.repository.AccountRepository;
+import org.golfettozh.finTrack.repository.TransactionRepository;
+import org.golfettozh.finTrack.repository.UserRepository;
+import org.golfettozh.finTrack.service.AccountService;
+import org.golfettozh.finTrack.service.TransactionService;
+import org.golfettozh.finTrack.service.UserService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+
+import java.util.Scanner;
 
 public class Main {
 
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("fin-track");
 
+    // Main.java
     public static void main(String[] args) {
-
         try (EntityManager em = emf.createEntityManager()) {
+            Scanner scanner = new Scanner(System.in);
 
-            UserRepository userRepository = new UserRepository(em);
-            UserService userService = new UserService(userRepository);
-            AccountRepository accountRepository = new AccountRepository(em);
-            AccountService accountService = new AccountService(accountRepository, userRepository);
+            UserService userService = new UserService(new UserRepository(em));
+            AccountService accountService = new AccountService(new AccountRepository(em), new UserRepository(em));
+            TransactionService transactionService = new TransactionService(new TransactionRepository(em), new AccountRepository(em));
 
-
-            User savedUser = userService.registerUser("Rubens Golfetto", "rubens@gmail.com", "12345678910");
-            Account savedAccount = accountService.createAccount(1L,"0001-AB", Account.AccountType.CORRENTE);
-
-            System.out.println("✅ User cadastrado com sucesso! ID: " + savedUser.getId());
-            System.out.println("✅ User cadastrado com sucesso! ID: " + savedAccount.getAccountNumber());
-
-        } catch (Exception e) {
-            System.err.println("❌ Erro no sistema: " + e.getMessage());
-        } finally {
-            emf.close();
+            new AppMenu(scanner, userService, accountService, transactionService).start();
         }
     }
 }

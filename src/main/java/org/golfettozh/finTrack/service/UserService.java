@@ -1,7 +1,9 @@
-package service;
+package org.golfettozh.finTrack.service;
 
-import entity.User;
-import repository.UserRepository;
+import org.golfettozh.finTrack.entity.User;
+import org.golfettozh.finTrack.repository.UserRepository;
+
+import java.util.List;
 
 public class UserService {
 
@@ -19,5 +21,13 @@ public class UserService {
         User newUser = new User(name, email, cpf);
 
         return userRepository.save(newUser);
+    }
+
+    public List<User> returnAllUsers() {
+        return userRepository.findAllUsers();
+    }
+
+    public User returnOneUserByID(Long user_id) {
+        return userRepository.findUserById(user_id);
     }
 }
