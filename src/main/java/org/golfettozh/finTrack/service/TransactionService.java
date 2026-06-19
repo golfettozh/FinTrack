@@ -7,7 +7,6 @@ import org.golfettozh.finTrack.repository.TransactionRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 public class TransactionService {
 

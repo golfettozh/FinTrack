@@ -68,10 +68,6 @@ public class Transaction {
 
     public void setType(TransactionType type) {this.type = type;}
 
-    public BigDecimal getValue() {
-        return value;
-    }
-
     public void setValue(BigDecimal balance) {
         this.value = balance;
     }
@@ -84,17 +80,11 @@ public class Transaction {
         this.description = description;
     }
 
-    public LocalDateTime getTransactionDate() {
-        return transactionDate;
-    }
 
     public void setTransactionDate(LocalDateTime transactionDate) {
         this.transactionDate = transactionDate;
     }
 
-    public Account getAccount() {
-        return account;
-    }
 
     public void setAccount(Account account) {
         this.account = account;

@@ -18,7 +18,7 @@ public class AccountService {
         this.userRepository = userRepository;
     }
 
-    public Account createAccountForUsersWithUserID(Long userId, String accountNumber, Account.AccountType type) {
+    public void createAccountForUsersWithUserID(Long userId, String accountNumber, Account.AccountType type) {
 
         Optional<User> userOptional = userRepository.findById(userId);
 
@@ -32,7 +32,7 @@ public class AccountService {
 
         foundUser.addAccount(newAccount);
 
-        return accountRepository.save(newAccount);
+        accountRepository.save(newAccount);
     }
 
     public List<Account> findAllAccountsByUserId(Long userId) {
