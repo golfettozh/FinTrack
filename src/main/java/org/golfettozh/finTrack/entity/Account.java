@@ -42,6 +42,8 @@ public class Account {
         this.user = user;
         this.balance = balance;
         this.type = type;
+
+        setBalance(BigDecimal.valueOf(200)); // Teste, remover dps
     }
 
     public Long getId() {
@@ -74,13 +76,13 @@ public class Account {
 
     @Override
     public String toString() {
-        String nomeDono = (this.user != null) ? this.user.getName() : "Usuário Desconhecido";
-
-        return "\n======== TITULAR Account: " + nomeDono + " ========\n" +
-                "Conta ID: " + getId() + "\n" +
-                "Número:   " + getAccountNumber() + "\n" +
-                "Tipo:     " + getType() + "\n" +
-                "Saldo:    R$ " + getBalance() + "\n" +
-                "=======================================";
+        return String.format("""
+            
+            ┌─────────────────────────────┐
+            │  ID:    %-20d │
+            │  Tipo:  %-20s │
+            │  Saldo: R$ %-17.2f │
+            └─────────────────────────────┘
+            """, getId(), getType(), getBalance());
     }
 }

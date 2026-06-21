@@ -7,6 +7,7 @@ import org.golfettozh.finTrack.repository.TransactionRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class TransactionService {
 
@@ -19,7 +20,7 @@ public class TransactionService {
         this.accountRepository = accountRepository;
     }
 
-    public void registerDeposit(Long accountId, BigDecimal amount, String description, Transaction.TransactionType type) {
+    public void registerDeposit(Long accountId, BigDecimal amount, String description) {
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new ArithmeticException("Valor negativo ou ZERO, sendo passado no valor de depositar");
         }
@@ -38,7 +39,7 @@ public class TransactionService {
         transaction.setAccount(account);
         transaction.setValue(amount);
         transaction.setDescription(description);
-        transaction.setType(type);
+        transaction.setType(Transaction.TransactionType.DEPOSITO);
         transaction.setTransactionDate(LocalDateTime.now());
 
         transactionRepository.save(transaction);
@@ -62,5 +63,44 @@ public class TransactionService {
 
         System.out.printf("✅ Saque de R$ %.2f realizado com sucesso!%n", amount);
         System.out.printf("💰 Saldo atual: R$ %.2f%n", account.getBalance());
+    }
+
+    public void registerTransfer(Long originAccountId, Long destinationAccountId, BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Valor negativo ou ZERO");
+        }
+
+        Account originAccount = accountRepository.findById(originAccountId)
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+        Account destinationAccount = accountRepository.findById(destinationAccountId)
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+
+        if (originAccount.getBalance().compareTo(amount) < 0) {
+            throw new IllegalArgumentException("Saldo insuficiente");
+        }
+
+        originAccount.setBalance(originAccount.getBalance().subtract(amount));
+        destinationAccount.setBalance(destinationAccount.getBalance().add(amount));
+
+        accountRepository.save(originAccount);
+        accountRepository.save(destinationAccount);
+
+        transactionRepository.save(new Transaction(amount, "Transferência enviada", originAccount, Transaction.TransactionType.TRANSFERENCIA));
+        transactionRepository.save(new Transaction(amount, "Transferência recebida", destinationAccount, Transaction.TransactionType.TRANSFERENCIA));
+
+    }
+
+    public BigDecimal getConsolidatedBalance(Long userId) {
+        return accountRepository.findAccountsByUserId(userId)
+                .stream()
+                .map(Account::getBalance)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public List<Transaction> getAccountStatement(Long accountId) {
+        accountRepository.findById(accountId)
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+
+        return transactionRepository.findByAccountId(accountId);
     }
 }

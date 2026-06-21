@@ -33,7 +33,7 @@ public class AccountMenu {
     private void createAccount() {
         System.out.println("ID do usuário: ");
         Long userId = scanner.nextLong();
-        scanner.nextLine(); // consome o \n
+        scanner.nextLine();
         System.out.println("Número da conta: ");
         String number = scanner.nextLine();
         System.out.println("Tipo (CORRENTE, POUPANCA): ");

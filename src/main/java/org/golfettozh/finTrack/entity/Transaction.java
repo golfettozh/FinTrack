@@ -34,13 +34,13 @@ public class Transaction {
     @JoinColumn(name = "account_id")
     private Account account;
 
-    /*
+
     @ManyToOne
-    @JoinColumn(name = "categoria_id")
-    private Categoria categoria;
-    */
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     public Transaction(BigDecimal value, String description,  Account account, TransactionType transactionType) {
+
         this.value = value;
         this.description = description;
         this.account = account;
@@ -90,12 +90,43 @@ public class Transaction {
         this.account = account;
     }
 
+    public Account getAccount() {
+        return account;
+    }
+
+    public BigDecimal getValue() {
+        return value;
+    }
+
+    public LocalDateTime getTransactionDate() {
+        return transactionDate;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
     @Override
     public String toString() {
-        return "\n======== TITULAR Transaction ========\n" +
-                "Conta ID: " + getId() + "\n" +
-                "Description:   " + getDescription() + "\n" +
-                "Tipo:     " + getType() + "\n" +
-                "=======================================";
+        return String.format("""
+            
+            ┌──────────────────────────────────┐
+            │  ID:        %-20d│
+            │  Tipo:      %-20s│
+            │  Valor:     R$ %-17.2f│
+            │  Categoria: %-20s│
+            │  Descrição: %-20s│
+            │  Data:      %-20s│
+            └──────────────────────────────────┘
+            
+            """,
+                id, type, value,
+                category != null ? category.getName() : "Sem categoria",
+                description != null ? description : "Sem descrição",
+                transactionDate);
     }
 }

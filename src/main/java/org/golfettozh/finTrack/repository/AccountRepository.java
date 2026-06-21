@@ -18,4 +18,10 @@ public class AccountRepository extends GenericRepository<Account> {
                 .getResultList();
     }
 
+    public List<Account> findAccountsByUserId(Long userId) {
+        return entityManager.createQuery(
+                        "SELECT a FROM Account a WHERE a.user.id = :userId", Account.class)
+                .setParameter("userId", userId)
+                .getResultList();
+    }
 }
